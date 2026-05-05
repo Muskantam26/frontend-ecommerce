@@ -8,6 +8,9 @@ import { MegaMenu } from "./MegaMenu";
 import { AccountSidebar } from "./AccountSidebar";
 import { CartSidebar } from "./CartSidebar";
 import MobileSidebar from "./sidebars.jsx/MobileSidebar";
+import { useDispatch, useSelector } from "react-redux";
+import { toggleCart, openCart, fetchCart } from "../redux/slice/cartSlice";
+import { useEffect } from "react";
 
 const CloseIcon = () => (
   <svg
@@ -114,11 +117,22 @@ const BagIcon = () => (
 
 const Header1 = ({ isAccountOpen, setIsAccountOpen }) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isCartOpen, setIsCartOpen] = useState(false);
   const location = useLocation();
 
-  const isHome = location.pathname === '/';
+  const { cart, isOpen: isCartOpen } = useSelector((state) => state.cart);
+  const { user } = useSelector((state) => state.auth);
+
+  useEffect(() => {
+    if (user) {
+      dispatch(fetchCart());
+    }
+  }, [user, dispatch]);
+
+  const itemsCount = cart?.items?.reduce((acc, item) => acc + item.quantity, 0) || 0;
+  const totalPrice = cart?.items?.reduce((acc, item) => acc + (item.product?.price?.sellingPrice || 0) * item.quantity, 0) || 0;
+  const isHome = location.pathname === '/home';
 
   return (
     
@@ -178,7 +192,7 @@ const Header1 = ({ isAccountOpen, setIsAccountOpen }) => {
           />
           </span>
 
-          <Button1 variant="cart" icon={<BagIcon />} badge="0" price="$0.00" onClick={() => setIsCartOpen(true)} />
+          <Button1 variant="cart" icon={<BagIcon />} badge={itemsCount.toString()} price={`$${totalPrice.toFixed(2)}`} onClick={() => dispatch(openCart())} />
         </div>
       </div>
 
@@ -198,9 +212,13 @@ const Header1 = ({ isAccountOpen, setIsAccountOpen }) => {
         </div>
 
         <div className="flex items-center gap-4">
-          <button className="relative" onClick={() => setIsCartOpen(true)}>
+          <button className="relative" onClick={() => dispatch(openCart())}>
             <BagIcon />
-            <span className="absolute -top-1 -right-2 bg-yellow-400 text-black text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">1</span>
+            {itemsCount > 0 && (
+              <span className="absolute -top-1 -right-2 bg-yellow-400 text-black text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
+                {itemsCount}
+              </span>
+            )}
           </button>
         </div>
       </div>
@@ -217,7 +235,7 @@ const Header1 = ({ isAccountOpen, setIsAccountOpen }) => {
       <AccountSidebar isOpen={isAccountOpen} onClose={() => setIsAccountOpen(false)} />
 
       {/* Cart Sidebar */}
-      <CartSidebar isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
+      <CartSidebar isOpen={isCartOpen} onClose={() => dispatch(toggleCart())} />
     </div>
   );
 };

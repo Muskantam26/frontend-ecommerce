@@ -1,10 +1,11 @@
 import React from "react";
 import { ArrowUpRight } from "lucide-react";
-
-
+import { useNavigate } from "react-router-dom";
 
 export const CategorySlider = ({ data = [] }) => {
-  const extendedCategories = [...data, ...data];
+  const navigate = useNavigate();
+  const categoryData = Array.isArray(data) ? data : [];
+  const extendedCategories = [...categoryData, ...categoryData];
   return (
     <div className="w-full bg-white overflow-hidden z-10 relative flex">
      
@@ -15,6 +16,7 @@ export const CategorySlider = ({ data = [] }) => {
             {extendedCategories.map((cat, index) => (
               <div
                 key={index}
+                onClick={() => navigate('/collection', { state: { categoryId: cat._id } })}
                 className="group w-[250px] md:w-[300px] flex flex-col rounded-[24px] cursor-pointer bg-[#f7f7f7] p-2"
               >
                 {/* Image Section */}
@@ -27,9 +29,9 @@ export const CategorySlider = ({ data = [] }) => {
                 </div>
 
                 {/* Content Section with Hover Effect */}
-                <div className="relative w-full p-4 flex justify-between items-center overflow-hidden rounded-[16px] mt-2 group-hover:text-brand-text-hover transition-colors duration-300">
+                <div className="relative w-full p-4 flex justify-between items-center overflow-hidden rounded-[16px] mt-2 group-hover:text-white transition-colors duration-300">
                   {/* Left-to-right black background slide */}
-                  <div className="absolute inset-0 bg-brand-hover -translate-x-[101%] group-hover:translate-x-0 transition-transform duration-500 ease-in-out z-[0]"></div>
+                  <div className="absolute inset-0 bg-black -translate-x-[101%] group-hover:translate-x-0 transition-transform duration-500 ease-in-out z-[0]"></div>
 
                   {/* Text Container */}
                   <span className="font-semibold text-xs  whitespace-normal leading-tight w-[70%] z-10 transition-colors duration-300">

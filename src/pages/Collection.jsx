@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useCallback } from 'react'
 import HeaderPage from '../component/headerPage'
 import SidebarFilter from '../collections/SidebarFilter'
 import HandpickedElegance from '../component/Hero/HandpickedElegance'
@@ -6,16 +6,91 @@ import CoreFeatures from '../component/Hero/CoreFeatures'
 import { Leaf, Lightbulb, PencilRuler, Recycle, X, SlidersHorizontal, ChevronDown } from 'lucide-react'
 import Tags from '../collections/Tags'
 import CollectionProduct from '../collections/CollectionProduct'
-import { BsFillGrid3X3GapFill } from "react-icons/bs";
 import { IoGrid } from "react-icons/io5";
-import { CiBoxList } from "react-icons/ci";
 import SortDropdown from '../collections/SortDropdown';
 import { Button1 } from '../component/Btn/Button1'
+import { getProductsApi } from '../API/product-api'
+import { getCategoriesApi } from '../api/category-api'
+import { useNavigate, useLocation } from "react-router-dom";
 
 
 
 const Collection = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
     const [isFilterOpen, setIsFilterOpen] = useState(false);
+    const [products, setProducts] = useState([]);
+    const [page, setPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+    const [selectedCategoryId, setSelectedCategoryId] = useState(location.state?.categoryId || null);
+    const [loading, setLoading] = useState(false);
+    const [filters, setFilters] = useState({
+      priceRange: [0, 5000],
+      brands: [],
+      colors: [],
+    });
+
+    const fetchProducts = async (currentPage, categoryId, currentFilters = filters, append = false) => {
+      try {
+        setLoading(true);
+        const res = await getProductsApi({
+          page: currentPage,
+          category: categoryId,
+          minPrice: currentFilters.priceRange[0],
+          maxPrice: currentFilters.priceRange[1],
+          limit: 9
+        });
+        
+        const productsList = res?.data?.products || res?.products || [];
+        const totalPagesCount = res?.data?.pagination?.totalPages || res?.pages || 1;
+
+        const transformedProducts = productsList.map(p => ({
+          id: p._id,
+          name: p.name,
+          price: typeof p.price === 'object' ? `$${(p.price?.sellingPrice || 0).toFixed(2)}` : `$${(p.price || 0).toFixed(2)}`,
+          image: p.images && p.images.length > 0 ? p.images[0] : "https://via.placeholder.com/300"
+        }));
+
+        if (append) {
+          setProducts(prev => [...prev, ...transformedProducts]);
+        } else {
+          setProducts(transformedProducts);
+        }
+        setTotalPages(totalPagesCount);
+      } catch (error) {
+        console.error("Fetch Products Error:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    React.useEffect(() => {
+      fetchProducts(1, selectedCategoryId, filters);
+      setPage(1);
+    }, [selectedCategoryId, filters]);
+
+    const handleLoadMore = () => {
+      const nextPage = page + 1;
+      if (nextPage <= totalPages) {
+        fetchProducts(nextPage, selectedCategoryId, filters, true);
+        setPage(nextPage);
+      }
+    };
+
+    const handleFilterChange = useCallback((newFilters) => {
+      setFilters(prev => {
+        if (JSON.stringify(prev) === JSON.stringify(newFilters)) return prev;
+        return newFilters;
+      });
+    }, []);
+
+    const handleCategorySelect = (id) => {
+      setSelectedCategoryId(id);
+    };
+
+    const handleProductClick = (id) => {
+  navigate(`/product/${id}`);
+};
 
     const handpickedEleganceData = [
   {
@@ -41,48 +116,6 @@ const Collection = () => {
     name: "Modern Wooden Lounge Chair With Wide Fabric Arms",
     price: "$155.00",
     image: "//nov-minicom.myshopify.com/cdn/shop/files/1-min_202fa2e4-302c-481c-aab5-74b98f061838.jpg?v=1749110906&width=260",
-  },
-  {
-    id: 5,
-    name: "Modern Low Profile Swivel Sofa With Soft Seat",
-    price: "$125.00",
-    image: "//nov-minicom.myshopify.com/cdn/shop/files/1-min_be47ec7a-ae18-44a0-ad6b-efeabb425930.jpg?v=1749110719&width=260",
-  },
-  {
-    id: 6,
-    name: "Minimalist White Ceramic Vases Set",
-    price: "$45.00",
-    image: "//nov-minicom.myshopify.com/cdn/shop/files/1-min_0c6275f8-a24e-4702-90d0-bd01e49e1b67.jpg?v=1749111925&width=260",
-  },
-  {
-    id: 7,
-    name: "Classic Wooden Dining Chair With Curved Back",
-    price: "$89.00",
-    image: "//nov-minicom.myshopify.com/cdn/shop/files/1-min_02d0e979-f8f4-49b4-bbc3-c4852675c021.jpg?v=1749111160&width=260",
-  },
-  {
-    id: 8,
-    name: "Round Coffee Table With Golden Metal Legs",
-    price: "$210.00",
-    image: "//nov-minicom.myshopify.com/cdn/shop/files/1-min_dfb1df34-1c68-4ee5-8bfb-ae5b3f5e430b.jpg?v=1749111367&width=260",
-  },
-  {
-    id: 9,
-    name: "Minimalist White Ceramic Vases Set",
-    price: "$45.00",
-    image: "//nov-minicom.myshopify.com/cdn/shop/files/1-min_dfb1df34-1c68-4ee5-8bfb-ae5b3f5e430b.jpg?v=1749111367&width=260",
-  },
-  {
-    id: 10,
-    name: "Classic Wooden Dining Chair With Curved Back",
-    price: "$89.00",
-    image: "//nov-minicom.myshopify.com/cdn/shop/files/1-min_dfb1df34-1c68-4ee5-8bfb-ae5b3f5e430b.jpg?v=1749111367&width=260",
-  },
-  {
-    id: 11,
-    name: "Round Coffee Table With Golden Metal Legs",
-    price: "$210.00",
-    image: "//nov-minicom.myshopify.com/cdn/shop/files/1-min_dfb1df34-1c68-4ee5-8bfb-ae5b3f5e430b.jpg?v=1749111367&width=260",
   },
 ];
 
@@ -120,7 +153,10 @@ const coreFeaturesData = {
 
         <div className="p-4 w-full mx-auto">
         <div className='relative z-20 mx-auto'>
-          <CollectionProduct/>
+          <CollectionProduct 
+             onCategorySelect={handleCategorySelect} 
+             selectedCategory={selectedCategoryId} 
+          />
         </div>
 
     <div className='flex flex-col lg:flex-row mt-5 relative'>
@@ -139,23 +175,30 @@ const coreFeaturesData = {
          />
 
          {/* Mobile Sidebar Drawer */}
-         <div className={`fixed inset-y-0 left-0 z-[70] w-80 max-w-[85vw] bg-background overflow-y-auto transform transition-transform duration-300 ease-in-out lg:hidden ${isFilterOpen ? 'translate-x-0' : '-translate-x-full'} shadow-xl`}>
-           <div className="flex justify-between items-center  sticky top-0 bg-background z-10">
+         <div className={`fixed inset-y-0 left-0 z-[70] w-80 max-w-[85vw] bg-white overflow-y-auto transform transition-transform duration-300 ease-in-out lg:hidden ${isFilterOpen ? 'translate-x-0' : '-translate-x-full'} shadow-xl`}>
+           <div className="flex justify-between items-center  sticky top-0 bg-white z-999">
             
             
            </div>
            <div className="p-4">
-             <SidebarFilter/>
+             <SidebarFilter 
+               onCategorySelect={handleCategorySelect} 
+               selectedCategory={selectedCategoryId}
+               onFilterChange={handleFilterChange}
+             />
            </div>
          </div>
 
-         {/* Desktop Sidebar */}
-         <div className='hidden lg:block w-72 shrink-0'>
-            <SidebarFilter/>
-         </div>
+          <div className='hidden lg:block w-72 shrink-0'>
+             <SidebarFilter 
+               onCategorySelect={handleCategorySelect} 
+               selectedCategory={selectedCategoryId}
+               onFilterChange={handleFilterChange}
+             />
+          </div>
          
          <div className='flex-1 overflow-hidden lg:pl-5'>
-          <div className='w-full sticky  flex justify-between items-center pl-0 lg:pl-4 mb-6 lg:mb-0'>
+          <div className='w-full relative  flex justify-between items-center pl-0 lg:pl-4 mb-6 lg:mb-0'>
             <SortDropdown />
             <div className='flex gap-3 items-center text-subtitle pr-5 lg:pr-5'>
                <button className="bg-black text-background p-2.5 rounded hover:bg-title/90 transition-colors">
@@ -166,19 +209,25 @@ const coreFeaturesData = {
                </button> */}
             </div>
           </div>
-        <HandpickedElegance data={handpickedEleganceData} itemsPerRow={3} isSlider={false}
+        <HandpickedElegance data={products} itemsPerRow={3} isSlider={false}
+
         title=''
         subtitle=''
+          onProductClick={handleProductClick}
+
         />
         
-         <div className="flex justify-center">
-          
-                    <Button1 
-                      variant="primary" 
-                      text="Load more items" 
-                      className=" justify-center"
-                    />
-               </div>
+         {page < totalPages && (
+           <div className="flex justify-center mt-8">
+             <Button1 
+               variant="primary" 
+               text={loading ? "Loading..." : "Load more items"} 
+               className="justify-center"
+               onClick={handleLoadMore}
+               disabled={loading}
+             />
+           </div>
+         )}
          </div>
        </div>
 

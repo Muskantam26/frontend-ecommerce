@@ -1,3 +1,4 @@
+import axios from "axios";
 import appLogo from "../assets/MinicomLogo.png";
 // import appFavicon from "../assetS/AYUCARELOGO.PNG";
 // import axios from "axios";
@@ -15,6 +16,11 @@ export const MainContent = {
   appDescription: "Ayucare-Admin",
 };
 
+export const Axios = axios.create({
+  baseURL: "http://localhost:5000/api", 
+  withCredentials: true,
+});
+
 // export const backendConfig = {
 //   base: import.meta.env.VITE_API_BASE_URL,
 //   origin: import.meta.env.VITE_API_ORIGIN,
@@ -27,14 +33,13 @@ export const MainContent = {
 //   withCredentials: true,
 // });
 
-// Axios.interceptors.request.use(
-//   (config) => {
-//     const state = store.getState();
-//     const token = state?.auth?.token;
-//     if (token) {
-//       config.headers.Authorization = `Bearer ${token}`;
-//     }
-//     return config;
-//   },
-//   (error) => Promise.reject(error)
-// );
+Axios.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);

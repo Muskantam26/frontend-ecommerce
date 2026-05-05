@@ -18,6 +18,8 @@ import Register from '../component/auth/Register'
 import Checkout from '../pages/Checkout'
 import MobileBottomNav from '../component/MobileBottomNav'
 import Footer from '../component/Footer'
+import OrderSuccess from '../pages/OrderSuccess'
+import OrderHistory from '../pages/OrderHistory'
 
 const Approutes = () => {
      const [isAccountOpen, setIsAccountOpen] = useState(false);
@@ -32,7 +34,7 @@ const Approutes = () => {
            <Route path="/products" element={<Products />} />
           <Route path="/product/:id" element={<Products />} />
           <Route path="/about-Us" element={<AboutUs/>}/>
-          <Route path="*" element={<Hero />} />
+          <Route path="/home" element={<Hero />} />
           <Route path="/404" element={<Error/>}/>
           <Route path="/contact" element={<ContactUS/>}/>
           <Route path="/Frequently-Asked-Questions" element={<Faqs/>}/>
@@ -44,6 +46,8 @@ const Approutes = () => {
           <Route path="/login" element={<Login/>}/>
           <Route path="/register" element={<Register/>}/>
           <Route path="/checkout" element={<Checkout/>}/>
+          <Route path="/order-success/:id" element={<OrderSuccess/>}/>
+          <Route path="/order-history" element={<OrderHistory />} />
           
        
         </Routes>

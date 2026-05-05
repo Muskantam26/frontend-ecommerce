@@ -1,6 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "motion/react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchCart, updateCartItem, removeCartItem } from "../redux/slice/cartSlice";
 
 const sidebarVariants = {
   open: (height = 1000) => ({
@@ -172,36 +174,37 @@ const NotePanel = ({ onCancel }) => (
 
 export const CartSidebar = ({ isOpen, onClose }) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [agreed, setAgreed] = useState(false);
   const [activePanel, setActivePanel] = useState(null); 
 
-  const [items, setItems] = useState([
-    {
-      id: 1,
-      title: "Wooden Base Table Lamp with Fabric Shade Design",
-      price: 35.00,
-      quantity: 1,
-      image: "https://nov-minicom.myshopify.com/cdn/shop/files/1-min_daa18c0d-51a1-4261-9101-857051e19324.jpg?v=1749107863&width=1120",
-    }
-  ]);
+  const { cart, loading } = useSelector((state) => state.cart);
+  const { user } = useSelector((state) => state.auth);
 
+  const items = cart?.items || [];
+
+  useEffect(() => {
+    if (isOpen && user) {
+      dispatch(fetchCart());
+    }
+  }, [isOpen, user, dispatch]);
+
+  const total = items.reduce((acc, item) => acc + (item.product?.price?.sellingPrice || 0) * item.quantity, 0);
   const freeShippingThreshold = 1000;
-  const total = items.reduce((acc, item) => acc + item.price * item.quantity, 0);
   const progress = Math.min((total / freeShippingThreshold) * 100, 100);
   const remainingForFreeShipping = Math.max(freeShippingThreshold - total, 0);
 
-  const updateQuantity = (id, delta) => {
-    setItems((prevItems) => 
-      prevItems.map(item => {
-        if (item.id === id) {
-          return { ...item, quantity: Math.max(1, item.quantity + delta) };
-        }
-        return item;
-      })
-    );
+  const handleUpdateQuantity = (productId, variantId, delta, currentQuantity) => {
+    const newQuantity = currentQuantity + delta;
+    if (newQuantity >= 1) {
+      dispatch(updateCartItem({ productId, variantId, quantity: newQuantity }));
+    }
   };
 
-  const removeItem = (id) => setItems((prevItems) => prevItems.filter(item => item.id !== id));
+  const handleRemoveItem = async (productId, variantId) => {
+  await dispatch(removeCartItem({ productId, variantId }));
+  dispatch(fetchCart());
+};
   
   const handleClose = () => {
     setActivePanel(null);
@@ -248,22 +251,38 @@ export const CartSidebar = ({ isOpen, onClose }) => {
 
           <motion.div variants={navVariants} className="flex-1 flex flex-col bg-white overflow-hidden min-h-0">
             <div className="flex-1 px-4 sm:px-6 py-4 sm:py-6 flex flex-col gap-4 sm:gap-6 overflow-y-auto min-h-0">
-              {items.map(item => (
-                <motion.div variants={itemVariants} key={item.id} className="flex gap-3 sm:gap-5 shrink-0">
+              {loading && items.length === 0 ? (
+                <div className="flex justify-center py-10 text-gray-400">Loading cart...</div>
+              ) : items.length === 0 ? (
+                <div className="flex justify-center py-10 text-gray-400 font-medium">Your cart is empty.</div>
+              ) : items.map(item => (
+                <motion.div variants={itemVariants} key={item._id} className="flex gap-3 sm:gap-5 shrink-0">
                  <div className="w-[80px] sm:w-[100px] h-[100px] sm:h-[120px] bg-[#f8f8f8] flex items-center justify-center shrink-0 p-2">
-                   <img src={item.image} alt={item.title} className="max-w-full max-h-full object-contain mix-blend-multiply" />
+                   <img src={item.product?.images?.[0]} alt={item.product?.name} className="max-w-full max-h-full object-contain mix-blend-multiply" />
                  </div>
                  <div className="flex flex-col flex-1">
-                   <div className="text-[13px] sm:text-[14px] font-bold text-gray-900 mb-2 sm:mb-4 leading-[1.3] pr-2">{item.title}</div>
-                   <div className="text-[13px] sm:text-[14px] font-bold text-gray-900 mb-2 sm:mb-4">${item.price.toFixed(2)}</div>
+                    <div className="text-[13px] sm:text-[14px] font-bold text-gray-900 mb-1 leading-[1.3] pr-2">{item.product?.name}</div>
+
+            
+                    {/* Variant Info */}
+                    <div className="flex flex-wrap gap-2 mb-2 text-[12px] text-gray-500">
+                       {item.attributes && Object.entries(item.attributes).map(([key, value]) => (
+                        <div key={key} className="bg-gray-100 px-2 py-0.5 rounded uppercase">
+                          {key}: <span className="text-gray-900 font-medium">{value}</span>
+                        </div>
+                      ))}
+                    </div>
+
+                   <div className="text-[13px] sm:text-[14px] font-bold text-gray-900 mb-2 sm:mb-4">${item.product?.price?.sellingPrice?.toFixed(2)}</div>
                    <div className="flex items-center gap-2 sm:gap-4 mt-auto">
                      <div className="flex items-center text-gray-500 text-[14px]">
-                       <button className="w-6 h-6 flex items-center justify-center hover:text-gray-900 transition-colors cursor-pointer" onClick={() => updateQuantity(item.id, -1)}>-</button>
+                       <button className="w-6 h-6 flex items-center justify-center hover:text-gray-900 transition-colors cursor-pointer" onClick={() => handleUpdateQuantity(item.product?._id, item.variantId, -1, item.quantity)}>-</button>
                        <span className="w-6 text-center text-gray-900">{item.quantity}</span>
-                       <button className="w-6 h-6 flex items-center justify-center hover:text-gray-900 transition-colors cursor-pointer" onClick={() => updateQuantity(item.id, 1)}>+</button>
+                       <button className="w-6 h-6 flex items-center justify-center hover:text-gray-900 transition-colors cursor-pointer" onClick={() => handleUpdateQuantity(item.product?._id, item.variantId, 1, item.quantity)}>+</button>
                      </div>
-                     <button className="w-8 h-8 flex items-center justify-center bg-[#f6f6f6] rounded-full hover:bg-gray-200 transition-colors ml-auto sm:ml-2 cursor-pointer" onClick={() => removeItem(item.id)}>
+                     <button className="w-8 h-8 flex items-center justify-center bg-[#f6f6f6] rounded-full hover:bg-gray-200 transition-colors ml-auto sm:ml-2 cursor-pointer" onClick={() => handleRemoveItem(item.product?._id, item.variantId)}>
                        <TrashIcon />
+                       
                      </button>
                    </div>
                  </div>
@@ -315,6 +334,9 @@ export const CartSidebar = ({ isOpen, onClose }) => {
               </div>
 
               <div className="flex flex-col gap-2 sm:gap-3 mb-4 sm:mb-5">
+                <button onClick={() => { navigate("/order-history"); handleClose(); }} className="w-full border border-gray-200 py-3 sm:py-3.5 text-center font-bold text-[12px] tracking-widest text-gray-800 hover:border-gray-900 hover:bg-gray-50 transition-all rounded-sm cursor-pointer">
+                  MY ORDERS
+                </button>
                   <button onClick={() => { navigate("/cart"); handleClose(); }} className="w-full border border-gray-200 py-3 sm:py-3.5 text-center font-bold text-[12px] tracking-widest text-gray-800 hover:border-gray-900 hover:bg-gray-50 transition-all rounded-sm cursor-pointer">
                     VIEW CART
                   </button>

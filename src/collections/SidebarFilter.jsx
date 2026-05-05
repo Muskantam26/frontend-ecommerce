@@ -3,10 +3,12 @@ import React, { useState, useEffect } from 'react'
 import { FaAngleUp } from "react-icons/fa6";
 import PriceFilter from './PriceFilter';
 import { Button1 } from '../component/Btn/Button1';
+import { getCategoriesApi } from "../api/category-api";
 
 const SidebarFilter = ({
+  
   initialPriceRange = [0, 270],
-  categories = ['Home Decor', 'Bedroom', 'Outdoor', 'Table & Desks', 'Plant Pots', 'Dining Room', 'Living Room'],
+  // categories = ['Home Decor', 'Bedroom', 'Outdoor', 'Table & Desks', 'Plant Pots', 'Dining Room', 'Living Room'],
   brands = [{ id: 'nov-minicom', label: 'Nov Minicom', count: 28 }],
   colors = [
     { id: 'mixed-1', style: { background: 'linear-gradient(135deg, #000000 50%, #d4a373 50%)' } },
@@ -19,8 +21,26 @@ const SidebarFilter = ({
   moreFiltersList = ['Basket', 'Bedroom', 'Cotton', 'Kitchen', 'Knife', 'Living room'],
   productTypesList = ['Armchairs', 'Basket', 'Desks', 'Knife', 'Nightstands', 'Plant Stands'],
   sizesList = ['Small', 'Medium', 'Large'],
-  onFilterChange
+  onFilterChange,
+  onCategorySelect,
+  selectedCategory
 }) => {
+
+
+  const [categories, setCategories] = useState([]);
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const res = await getCategoriesApi();
+        const cats = res?.data?.categories || res?.categories || (Array.isArray(res) ? res : []);
+        setCategories(cats);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+   fetchCategories();
+  }, []);
 
   const [priceRange, setPriceRange] = useState(initialPriceRange);
   const [selectedBrands, setSelectedBrands] = useState([]);
@@ -85,12 +105,27 @@ const SidebarFilter = ({
         <div className='flex items-center text-gray-900 mt-2 lg:mt-10 space-x-2 pb-6 border-b border-gray-200'>
           <Menu/> <h1 className='font-bold text-xl'>CATEGORIES</h1>
         </div>
-        <ul className='space-y-1 text-sm font-medium text-gray-700 mt-6'>
-          {categories.map((cat, idx) => (
-            <li key={idx} className='p-3 bg-[#f6f6f6] px-5 rounded cursor-pointer transition hover:bg-gray-200'>{cat}</li>
-          ))}
-          <li className='flex p-3 bg-[#f6f6f6] px-5 rounded items-center gap-2 cursor-pointer transition hover:bg-gray-200'>See More <Plus size={15}/></li>
-        </ul>
+        <ul className="space-y-1 text-sm font-medium text-gray-700 mt-6">
+  <li
+    onClick={() => onCategorySelect && onCategorySelect(null)}
+    className={`p-3 px-5 rounded cursor-pointer transition ${
+      !selectedCategory ? 'bg-black text-white' : 'bg-[#f6f6f6] hover:bg-gray-200'
+    }`}
+  >
+    All Categories
+  </li>
+  {(Array.isArray(categories) ? categories : []).map((cat) => (
+    <li
+      key={cat._id}
+      onClick={() => onCategorySelect && onCategorySelect(cat._id)}
+      className={`p-3 px-5 rounded cursor-pointer transition ${
+        selectedCategory === cat._id ? 'bg-black text-white' : 'bg-[#f6f6f6] hover:bg-gray-200'
+      }`}
+    >
+      {cat.title}
+    </li>
+  ))}
+</ul>
       </div>
   
       <div className="mt-8 border-t border-gray-200 pt-8">
@@ -108,7 +143,7 @@ const SidebarFilter = ({
           />
         </div>
       </div>
-c
+
       <div className='mt-8 pt-6 border-t border-gray-200'>
         <div className='flex justify-between items-center'>
             <h1 className='flex items-center text-gray-900 text-sm font-bold gap-2 uppercase'><FaAngleUp/>PRICE</h1>

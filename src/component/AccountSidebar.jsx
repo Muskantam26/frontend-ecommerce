@@ -2,6 +2,8 @@ import React, { useState, useRef, useEffect } from "react";
 import { MainContent } from "../constant/MainContent";
 import { useNavigate } from "react-router-dom";
 import { motion } from "motion/react";
+import { useSelector, useDispatch } from "react-redux";
+import { logout } from "../redux/slice/authSlice";
 
 const sidebarVariants = {
   open: (height = 1000) => ({
@@ -136,8 +138,16 @@ const CustomSelect = ({ options, value, onChange }) => {
 
 export const AccountSidebar = ({ isOpen, onClose }) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.auth);
   const [currency, setCurrency] = useState("USD");
   const [language, setLanguage] = useState("EN");
+
+  const handleLogout = () => {
+    dispatch(logout());
+    onClose();
+    navigate("/");
+  };
 
   const currencyOptions = [
     { value: "EUR_FR", label: "EUR €", flag: "🇫🇷" },
@@ -191,8 +201,26 @@ export const AccountSidebar = ({ isOpen, onClose }) => {
           {/* Customer Account Section */}
           <motion.div variants={itemVariants} className="flex flex-col gap-4">
             <h3 className="font-bold text-xs text-[#3f5364]  tracking-wider mb-2">CUSTOMER ACCOUNT</h3>
-            <span onClick={() => { navigate("/login"); onClose(); }} className="text-gray-800 text-xs hover:text-[var(--color-button)] font-medium transition-colors cursor-pointer">Login</span>
-            <span onClick={() => { navigate("/register"); onClose(); }} className="text-gray-800 text-xs hover:text-[var(--color-button)] font-medium transition-colors cursor-pointer">Register</span>
+            
+            {!user ? (
+              <>
+                <span onClick={() => { navigate("/login"); onClose(); }} className="text-gray-800 text-xs hover:text-[var(--color-button)] font-medium transition-colors cursor-pointer">Login</span>
+                <span onClick={() => { navigate("/register"); onClose(); }} className="text-gray-800 text-xs hover:text-[var(--color-button)] font-medium transition-colors cursor-pointer">Register</span>
+              </>
+            ) : (
+              <>
+                <div className="flex flex-col gap-1 mb-2">
+                  <span className="text-gray-500 text-[10px] tracking-wider uppercase">Logged in as</span>
+                  <span className="text-gray-800 text-sm font-semibold truncate">
+                    {user?.name || user?.email}
+                  </span>
+
+                </div>
+                <span onClick={() => { navigate("/order-history"); onClose(); }} className="text-gray-800 text-xs hover:text-[var(--color-button)] font-medium transition-colors cursor-pointer">Order History</span>
+                <span onClick={handleLogout} className="text-red-600 text-xs hover:text-red-700 font-medium transition-colors cursor-pointer">Logout</span>
+              </>
+            )}
+
             <span onClick={() => { navigate("/wishlist"); onClose(); }} className="text-gray-800 text-xs hover:text-[var(--color-button)] font-medium transition-colors cursor-pointer">Wishlist</span>
             <span onClick={() => { navigate("/checkout"); onClose(); }} className="text-gray-800 text-xs hover:text-[var(--color-button)] font-medium transition-colors cursor-pointer">Check out</span>
             <div className="pt-2"><hr className="border-gray-200" /></div>

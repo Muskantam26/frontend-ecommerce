@@ -31,7 +31,7 @@ const Footer = ({ data = footerData }) => {
   };
 
   return (
-    <footer className="bg-brand-hover text-white pb-6 md:pb-8 font-sans">
+    <footer className="bg-black  text-white pb-6 md:pb-8 font-sans">
       <div className="">
         <div className="lg:grid lg:grid-cols-12 flex flex-col md:gap-5 lg:gap-5">
           

@@ -18,7 +18,7 @@ export const Button1 = ({
 
   if (variant === "primary") {
     baseClass +=
-      "flex items-center rounded py-4 gap-2 bg-[var(--color-button)] text-[var(--color-button-text)] hover:text-[var(--color-button-text-hover)] h-full px-6 text-xs uppercase relative overflow-hidden";
+      "flex items-center rounded py-4 text-center  gap-2 bg-[var(--color-button)] text-[var(--color-button-text)] hover:text-[var(--color-button-text-hover)]  px-6 text-xs  relative overflow-hidden";
   } else if (variant === "outline") {
     baseClass +=
       `flex items-center gap-2 border px-6 h-13 rounded hover:bg-[var(--color-hover)] hover:border-none hover:text-[var(--color-button-text)] ${isActive ? 'bg-[var(--color-hover)] border-transparent text-[var(--color-button-text)]' : 'text-white'}`;

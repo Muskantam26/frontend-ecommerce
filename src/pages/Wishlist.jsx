@@ -1,38 +1,52 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import HeaderPage from '../component/headerPage';
 import { Trash2, CalendarDays } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchWishlist, removeFromWishlist } from '../redux/slice/wishlistSlice';
 import WishlistItem from '../component/WishlistItem';
+import Pageloader from '../pageloader/Pageloader';
 
-const initialWishlist = [
-  {
-    id: 1,
-    name: 'Solid Wood TV Stand With Storage Drawers Design',
-    price: '$135.00',
-    dateAdded: 'MAR 02, 2026',
-    image: 'https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?auto=format&fit=crop&q=80',
-    slug: '/product/1'
-  }
-];
+
 
 
 
 const Wishlist = () => {
   const navigate = useNavigate();
-  const [wishlist, setWishlist] = useState(initialWishlist);
+  const dispatch = useDispatch();
+  const { wishlist, loading } = useSelector((state) => state.wishlist);
+
+  useEffect(() => {
+    dispatch(fetchWishlist());
+  }, [dispatch]);
 
   const handleRemove = (id) => {
-    setWishlist(wishlist.filter(item => item.id !== id));
+    dispatch(removeFromWishlist(id));
   };
+
+  const wishlistItems = wishlist?.products?.map(product => ({
+    id: product._id,
+    name: product.name,
+    price: `$${product.price?.sellingPrice}`,
+    dateAdded: new Date(product.createdAt).toLocaleDateString('en-US', {
+      month: 'short',
+      day: '2-digit',
+      year: 'numeric'
+    }).toUpperCase(),
+    image: product.images?.[0] || 'https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?auto=format&fit=crop&q=80',
+    slug: `/product/${product._id}`
+  })) || [];
 
   return (
     <div className="bg-background min-h-screen">
       <HeaderPage title="Page Wishlist" />
       
       <div className=" w-full mx-auto px-4 lg:px-8 py-8 mt-8 md:mt-12">
-        {wishlist.length > 0 ? (
+        {loading ? (
+         <Pageloader/>
+        ) : wishlistItems.length > 0 ? (
           <div className="flex flex-col">
-            {wishlist.map((item) => (
+            {wishlistItems.map((item) => (
               <WishlistItem
                 key={item.id} 
                 item={item} 

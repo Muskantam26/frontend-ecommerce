@@ -45,7 +45,7 @@ const SortDropdown = () => {
 
       {isOpen && (
         <div 
-          className="absolute left-0 top-[100%] bg-white w-72 rounded-b-2xl rounded-tr-2xl z-10 pb-4 pt-2 shadow-[0_10px_20px_-5px_rgba(0,0,0,0.1),5px_0_20px_-5px_rgba(0,0,0,0.1)]  border border-t-0 border-gray-50"
+          className="absolute left-0 top-[100%] bg-white w-72 rounded-b-2xl rounded-tr-2xl z-999 pb-4 pt-2 shadow-[0_10px_20px_-5px_rgba(0,0,0,0.1),5px_0_20px_-5px_rgba(0,0,0,0.1)]  border border-t-0 border-gray-50"
         >
           {/* This absolute div covers the border/shadow seam between the top button and the dropdown list */}
           <div className="absolute -top-[1px] left-0 h-[2px] bg-white z-30 w-full max-w-[180px]" />

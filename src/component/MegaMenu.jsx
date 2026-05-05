@@ -8,7 +8,7 @@ export const MegaMenu = ({ isOpen, isHome }) => {
   const [hoveredMenu, setHoveredMenu] = useState(null);
 
   const menuItems = [
-    { id: 1, name: "HOME", path: "/" },
+    { id: 1, name: "HOME", path: "/home" },
     { id: 2, name: "COLLECTIONS", path: "/collection" },
     { id: 3, name: "PRODUCTS", path: "/products" },
     { 
@@ -26,7 +26,6 @@ export const MegaMenu = ({ isOpen, isHome }) => {
         { name: "Testimonial Page", path: "/page-testimonial" },
       ]
     },
-  
   ];
 
   return (

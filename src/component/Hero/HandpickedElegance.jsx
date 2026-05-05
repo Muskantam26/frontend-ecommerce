@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Star, Eye, ShoppingBag } from "lucide-react";
+import { Heart, Eye, ShoppingBag } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import { motion } from "framer-motion";
+import { addToWishlist } from "../../redux/slice/wishlistSlice";
 
 const HandpickedElegance = ({ 
   data = [], 
@@ -11,8 +13,29 @@ const HandpickedElegance = ({
   subtitle = "TIMELESS ELEGANCE FOR YOUR HOME"
 }) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.auth);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [visibleItems, setVisibleItems] = useState(itemsPerRow);
+
+  const handleAddToWishlist = async (e, productId) => {
+    e.stopPropagation();
+    try {
+      const token = localStorage.getItem("token");
+
+      if (!token || !user) {
+        alert("Please login to add products to wishlist");
+        navigate("/login");
+        return;
+      }
+
+      await dispatch(addToWishlist(productId)).unwrap();
+      alert("Product added to wishlist");
+    } catch (error) {
+      console.error("Add to wishlist error:", error);
+      alert(error || "Failed to add product to wishlist");
+    }
+  };
 
   useEffect(() => {
     const handleResize = () => {
@@ -138,22 +161,26 @@ const HandpickedElegance = ({
         >
           {data.map((product) => (
             <div
-              key={product.id}
+              key={product._id || product.id}
               className={`w-full sm:w-1/2 md:w-1/3 ${itemsPerRow === 3 ? 'lg:w-1/3' : itemsPerRow === 4 ? 'lg:w-1/4' : 'lg:w-1/5'} flex-shrink-0 px-3 ${!isSlider ? 'mb-8' : ''}`}
             >
-              <div onClick={() => navigate(`/product/${product.id}`)} className="group flex flex-col cursor-pointer h-full">
+              <div onClick={() => navigate(`/product/${product._id || product.id}`)} className="group flex flex-col cursor-pointer h-full">
                 {/* Image Container */}
                 <div className="relative  overflow-hidden flex items-center justify-center ">
                   <img
-                    src={product.image}
+                    src={(product.images && product.images[0]) || product.image}
                     alt={product.name}
                     className="w-full h-full object-contain mix-blend-multiply transition-transform duration-500 group-hover:scale-110"
                   />
 
                   {/* Hover Icons (Top Right) */}
                   <div className="absolute top-4 right-4 flex flex-col gap-2 translate-x-12 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 transition-all duration-300 ease-out z-10">
-                    <button className="w-9 h-9 bg-white rounded-full flex items-center justify-center text-black hover:bg-yellow-500 shadow-sm transition-colors">
-                      <Star className="w-4 h-4" />
+                    <button 
+                      onClick={(e) => handleAddToWishlist(e, product._id || product.id)}
+                      className="w-9 h-9 bg-white rounded-full flex items-center justify-center text-black hover:bg-yellow-500 shadow-sm transition-colors"
+                      title="Add to wishlist"
+                    >
+                      <Heart className="w-4 h-4" />
                     </button>
                     <button className="w-9 h-9 bg-white rounded-full flex items-center justify-center text-gray-700 hover:text-black shadow-sm transition-colors">
                       <Eye className="w-4 h-4" />
@@ -162,7 +189,7 @@ const HandpickedElegance = ({
 
                   {/* Hover Icon (Bottom Right) */}
                   <div className="absolute bottom-4 right-4 translate-y-12 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 ease-out delay-75 z-10">
-                    <button className="w-10 h-10 bg-brand-hover rounded-full flex items-center justify-center text-white hover:bg-gray-800 shadow-sm transition-colors">
+                    <button className="w-10 h-10 bg-(--color-button-hover) rounded-full flex items-center justify-center text-white hover:bg-gray-800 shadow-sm transition-colors">
                       <ShoppingBag className="w-4 h-4" />
                     </button>
                   </div>
@@ -183,6 +210,13 @@ const HandpickedElegance = ({
                     ))}
                   </div>
 
+                  {/* Category */}
+                  {product.category && product.category.title && (
+                    <span className="text-[10px] text-gray-500 font-bold uppercase tracking-wider mt-2 line-clamp-1">
+                      {product.category.title}
+                    </span>
+                  )}
+
                   {/* Title */}
                   <h3 className="text-sm text-gray-800 font-medium leading-relaxed line-clamp-2 mt-1">
                     {product.name}
@@ -190,7 +224,7 @@ const HandpickedElegance = ({
 
                   {/* Price */}
                   <p className="text-[15px] font-bold text-gray-900 mt-2">
-                    {product.price}
+                    ${product.price?.sellingPrice || product.price}
                   </p>
                 </div>
               </div>

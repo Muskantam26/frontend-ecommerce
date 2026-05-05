@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchCart, updateCartItem, removeCartItem } from '../redux/slice/cartSlice';
 import HeaderPage from '../component/headerPage';
 import HandpickedElegance from '../component/Hero/HandpickedElegance';
 
@@ -45,37 +47,34 @@ const recommendedProducts = [
 ];
 
 const ShopingCart = () => {
-
   const navigate = useNavigate();
-  const [items, setItems] = useState([
-    {
-      id: 1,
-      title: "Wooden Base Table Lamp with Fabric Shade Design",
-      price: 35.00,
-      quantity: 1,
-      image: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&q=80",
-    }
-  ]);
+  const dispatch = useDispatch();
 
+  const { cart, loading } = useSelector((state) => state.cart);
+  const { user } = useSelector((state) => state.auth);
+
+  const items = cart?.items || [];
+
+  useEffect(() => {
+    if (user) {
+      dispatch(fetchCart());
+    }
+  }, [user, dispatch]);
+
+  const total = items.reduce((acc, item) => acc + (item.product?.price?.sellingPrice || 0) * item.quantity, 0);
   const freeShippingThreshold = 1000;
-  const total = items.reduce((acc, item) => acc + item.price * item.quantity, 0);
   const progress = Math.min((total / freeShippingThreshold) * 100, 100);
   const remainingForFreeShipping = Math.max(freeShippingThreshold - total, 0);
 
-  const updateQuantity = (id, delta) => {
-    setItems((prevItems) => 
-      prevItems.map(item => {
-        if (item.id === id) {
-          const newQuantity = Math.max(1, item.quantity + delta);
-          return { ...item, quantity: newQuantity };
-        }
-        return item;
-      })
-    );
+  const handleUpdateQuantity = (productId, variantId, delta, currentQuantity) => {
+    const newQuantity = currentQuantity + delta;
+    if (newQuantity >= 1) {
+      dispatch(updateCartItem({ productId, variantId, quantity: newQuantity }));
+    }
   };
 
-  const removeItem = (id) => {
-    setItems((prevItems) => prevItems.filter(item => item.id !== id));
+  const handleRemoveItem = (productId, variantId) => {
+    dispatch(removeCartItem({ productId, variantId }));
   };
 
   return (
@@ -97,46 +96,58 @@ const ShopingCart = () => {
 
             {/* Table Body */}
             <div className="border border-outline mb-6">
-              {items.length > 0 ? items.map(item => (
-                <div key={item.id} className="flex flex-col md:grid md:grid-cols-12 md:items-center py-6 px-4 md:px-6 border-b border-outline last:border-b-0 gap-4 md:gap-0">
+              {loading && items.length === 0 ? (
+                <div className="py-12 text-center text-body font-medium">Loading your cart...</div>
+              ) : items.length > 0 ? items.map(item => (
+                <div key={item._id} className="flex flex-col md:grid md:grid-cols-12 md:items-center py-6 px-4 md:px-6 border-b border-outline last:border-b-0 gap-4 md:gap-0">
                   <div className="col-span-12 md:col-span-6 flex items-start md:items-center gap-4 md:gap-6">
-                    <button onClick={() => removeItem(item.id)} className="hidden md:block">
+                    <button onClick={() => handleRemoveItem(item.product?._id, item.variantId)} className="hidden md:block cursor-pointer">
                       <TrashIcon />
                     </button>
                     <div className="w-[80px] h-[100px] bg-secondary flex items-center justify-center p-2 shrink-0">
-                      <img src={item.image} alt={item.title} className="max-w-full max-h-full object-contain mix-blend-multiply" />
+                      <img src={item.product?.images?.[0]} alt={item.product?.name} className="max-w-full max-h-full object-contain mix-blend-multiply" />
                     </div>
                     <div className="flex-1">
                       <div className="flex justify-between items-start">
                         <div className="text-[14px] text-title font-medium md:max-w-[250px] leading-relaxed pr-4 md:pr-0">
-                          {item.title}
+                          {item.product?.name}
                         </div>
-                        <button onClick={() => removeItem(item.id)} className="md:hidden mt-1 shrink-0">
+                        <button onClick={() => handleRemoveItem(item.product?._id, item.variantId)} className="md:hidden mt-1 shrink-0 cursor-pointer">
                           <TrashIcon />
                         </button>
                       </div>
+                      
+                      {/* Variant Info */}
+                      <div className="flex flex-wrap gap-2 mt-1 mb-2">
+                        {item.attributes && Object.entries(item.attributes).map(([key, value]) => (
+                          <div key={key} className="text-[11px] bg-gray-100 px-2 py-0.5 rounded text-gray-600 uppercase">
+                            {key}: <span className="text-gray-900 font-bold">{value}</span>
+                          </div>
+                        ))}
+                      </div>
+
                       <div className="md:hidden text-[14px] font-bold text-title mt-2">
-                        ${item.price.toFixed(2)}
+                        ${item.product?.price?.sellingPrice?.toFixed(2)}
                       </div>
                     </div>
                   </div>
                   
                   <div className="hidden md:block col-span-2 text-center text-[14px] font-bold text-title">
-                    ${item.price.toFixed(2)}
+                    ${item.product?.price?.sellingPrice?.toFixed(2)}
                   </div>
                   
                   <div className="col-span-12 md:col-span-2 flex items-center justify-between md:justify-center w-full mt-2 md:mt-0">
                     <span className="md:hidden text-[13px] font-bold text-title uppercase">Quantity</span>
                     <div className="flex border border-outline items-center w-[90px] h-10 bg-background">
-                      <button onClick={() => updateQuantity(item.id, -1)} className="w-8 h-full flex items-center justify-center text-subtitle hover:text-title transition-colors">-</button>
+                      <button onClick={() => handleUpdateQuantity(item.product?._id, item.variantId, -1, item.quantity)} className="w-8 h-full flex items-center justify-center text-subtitle hover:text-title transition-colors cursor-pointer">-</button>
                       <span className="flex-1 text-center font-bold text-[13px] text-title">{item.quantity}</span>
-                      <button onClick={() => updateQuantity(item.id, 1)} className="w-8 h-full flex items-center justify-center text-subtitle hover:text-title transition-colors">+</button>
+                      <button onClick={() => handleUpdateQuantity(item.product?._id, item.variantId, 1, item.quantity)} className="w-8 h-full flex items-center justify-center text-subtitle hover:text-title transition-colors cursor-pointer">+</button>
                     </div>
                   </div>
 
                   <div className="col-span-12 md:col-span-2 flex justify-between md:block text-right text-[14px] font-medium text-body mt-2 md:mt-0">
                     <span className="md:hidden text-[13px] font-bold text-title uppercase">Total</span>
-                    <span className="text-title md:text-body font-bold md:font-medium">${(item.price * item.quantity).toFixed(2)}</span>
+                    <span className="text-title md:text-body font-bold md:font-medium">${((item.product?.price?.sellingPrice || 0) * item.quantity).toFixed(2)}</span>
                   </div>
                 </div>
               )) : (

@@ -16,7 +16,12 @@ import ProductGrid from "../component/Hero/ProductGrid";
 import CoreFeatures from "../component/Hero/CoreFeatures";
 import JournalSection from "../component/Hero/JournalSection";
 import Faq from "../component/Hero/Faq";
+import { useNavigate } from "react-router-dom";
 
+
+import { useEffect, useState } from "react";
+import { getCategoriesApi } from "../api/category-api"; 
+import { getProductsApi } from "../API/product-api";
 const slides = [
   {
     id: 1,
@@ -538,6 +543,39 @@ const faqData = {
 };
 
 const Hero = () => {
+  const [categories, setCategories] = useState([]);
+  const [latestProducts, setLatestProducts] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [categoriesRes, productsRes] = await Promise.all([
+          getCategoriesApi(),
+          getProductsApi({ limit: 8 })
+        ]);
+
+        // Access categories from .data.categories
+        setCategories(categoriesRes?.data?.categories || categoriesRes?.categories || []);
+
+        // Access products from .data.products
+        const productsList = productsRes?.data?.products || productsRes?.products || [];
+        
+        const transformedProducts = productsList.map(p => ({
+          id: p._id,
+          name: p.name,
+          price: typeof p.price === 'object' ? `$${(p.price?.sellingPrice || 0).toFixed(2)}` : `$${(p.price || 0).toFixed(2)}`,
+          category: p.category,
+          image: p.images && p.images.length > 0 ? p.images[0] : "https://via.placeholder.com/300"
+        }));
+        setLatestProducts(transformedProducts);
+
+      } catch (error) {
+        console.log("Fetch Data Error:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
   return (
     <>
    
@@ -550,11 +588,12 @@ const Hero = () => {
         <Ticker data={tickerData} />
       </div>
 
+     <div className="mt-5">
+      <CategorySlider data={categories} />
+      </div> 
+
       <div className="mt-5">
-        <CategorySlider data={categorySliderData} />
-      </div>
-      <div className="mt-5">
-        <HandpickedElegance data={handpickedEleganceData} />
+        <HandpickedElegance data={latestProducts.length > 0 ? latestProducts : handpickedEleganceData} />
       </div>
       <div className="mt-5 ">
         <ShoppingGuide data={shoppingGuideData} />
