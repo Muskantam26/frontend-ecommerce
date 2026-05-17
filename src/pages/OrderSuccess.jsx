@@ -79,7 +79,7 @@ const OrderSuccess = () => {
                     <p className="text-xs text-body">Qty: {item.quantity}</p>
                   </div>
                 </div>
-                <p className="text-sm font-bold text-title">${(item.price * item.quantity).toFixed(2)}</p>
+                <p className="text-sm font-bold text-title">₹{(item.price * item.quantity).toFixed(2)}</p>
               </div>
             ))}
           </div>
@@ -87,15 +87,15 @@ const OrderSuccess = () => {
           <div className="mt-6 pt-6 border-t border-outline space-y-2">
             <div className="flex justify-between text-sm">
               <span className="text-body">Subtotal</span>
-              <span className="text-title">${currentOrder?.itemsPrice?.toFixed(2)}</span>
+              <span className="text-title">₹{currentOrder?.itemsPrice?.toFixed(2)}</span>
             </div>
             <div className="flex justify-between text-sm">
               <span className="text-body">Shipping</span>
-              <span className="text-title">${currentOrder?.shippingPrice?.toFixed(2)}</span>
+              <span className="text-title">₹{currentOrder?.shippingPrice?.toFixed(2)}</span>
             </div>
             <div className="flex justify-between text-lg font-bold pt-2">
               <span className="text-title">Total</span>
-              <span className="text-title">${currentOrder?.totalPrice?.toFixed(2)}</span>
+              <span className="text-title">₹{currentOrder?.totalPrice?.toFixed(2)}</span>
             </div>
           </div>
         </div>

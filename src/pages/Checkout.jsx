@@ -64,14 +64,7 @@ const Checkout = () => {
     }
   }, [addresses]);
 
-  useEffect(() => {
-    if (success && currentOrder) {
-      const orderId = currentOrder._id;
-      dispatch(resetOrderState());
-      dispatch(fetchCart()); // Refresh cart (should be empty now)
-      navigate(`/order-success/${orderId}`);
-    }
-  }, [success, currentOrder, dispatch, navigate]);
+  // Navigation to order-success is handled explicitly below after successful COD creation or Razorpay payment verification.
 
   const subtotal = cartItems.reduce((acc, item) => {
     const price = typeof item.product?.price === 'object' 
@@ -158,7 +151,13 @@ const Checkout = () => {
     };
 
     if (formData.paymentMethod === 'COD') {
-      dispatch(createOrder(orderData));
+      const resultAction = await dispatch(createOrder(orderData));
+      if (createOrder.fulfilled.match(resultAction)) {
+        const newOrder = resultAction.payload;
+        dispatch(resetOrderState());
+        dispatch(fetchCart());
+        navigate(`/order-success/${newOrder._id}`);
+      }
     } else {
       // Razorpay Payment
       try {
@@ -169,7 +168,7 @@ const Checkout = () => {
         }
 
         // 1. Create order on our backend first
-        const resultAction = await dispatch(createOrder(orderData));
+        const resultAction = dispatch(createOrder(orderData));
         if (createOrder.fulfilled.match(resultAction)) {
           const newOrder = resultAction.payload;
           
@@ -199,6 +198,8 @@ const Checkout = () => {
                 });
 
                 if (verifyRes.data.success) {
+                  dispatch(resetOrderState());
+                  dispatch(fetchCart());
                   navigate(`/order-success/${newOrder._id}`);
                 } else {
                   alert("Payment verification failed");
@@ -498,7 +499,7 @@ const Checkout = () => {
               <h2 className="mb-4">Shipping method</h2>
               <div className="bg-secondary text-subtitle text-sm py-4 px-4 rounded flex items-center justify-between border border-outline">
                 <span>Standard Shipping</span>
-                <span className="font-bold">{shippingPrice === 0 ? 'FREE' : `$${shippingPrice.toFixed(2)}`}</span>
+                <span className="font-bold">{shippingPrice === 0 ? 'FREE' : `₹${shippingPrice.toFixed(2)}`}</span>
               </div>
             </section>
 
@@ -631,7 +632,7 @@ const Checkout = () => {
               </div>
               <div className="flex justify-between text-sm">
                 <span className="text-subtitle">Shipping</span>
-                <span className="text-title font-medium">{shippingPrice === 0 ? 'FREE' : `$${shippingPrice.toFixed(2)}`}</span>
+                <span className="text-title font-medium">{shippingPrice === 0 ? 'FREE' : `₹${shippingPrice.toFixed(2)}`}</span>
               </div>
             </div>
 
@@ -640,7 +641,7 @@ const Checkout = () => {
               <div className="flex justify-between items-center">
                 <span className="text-base font-semibold text-title">Total</span>
                 <div className="flex items-center gap-2">
-                  <span className="text-[11px] text-body uppercase font-medium">USD</span>
+                  <span className="text-[11px] text-body uppercase font-medium">INR</span>
                   <span className="text-xl font-semibold text-title">${total.toFixed(2)}</span>
                 </div>
               </div>

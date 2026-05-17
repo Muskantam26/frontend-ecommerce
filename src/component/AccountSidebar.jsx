@@ -140,7 +140,7 @@ export const AccountSidebar = ({ isOpen, onClose }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
-  const [currency, setCurrency] = useState("USD");
+  const [currency, setCurrency] = useState("INR");
   const [language, setLanguage] = useState("EN");
 
   const handleLogout = () => {
@@ -153,7 +153,7 @@ export const AccountSidebar = ({ isOpen, onClose }) => {
     { value: "EUR_FR", label: "EUR €", flag: "🇫🇷" },
     { value: "EUR_DE", label: "EUR €", flag: "🇩🇪" },
     { value: "GBP", label: "GBP £", flag: "🇬🇧" },
-    { value: "USD", label: "USD $", flag: "🇺🇸" },
+    { value: "INR", label: "INR ₹", flag: "🇺🇸" },
   ];
 
   const languageOptions = [

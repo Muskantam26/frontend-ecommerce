@@ -320,7 +320,7 @@ export const CartSidebar = ({ isOpen, onClose }) => {
               <div className="mb-6">
                 <div className="text-gray-600 text-[14px] font-medium mb-3">
                   {remainingForFreeShipping > 0 
-                    ? `Spend $${remainingForFreeShipping.toFixed(2)} for free shipping` 
+                    ? `Spend ₹${remainingForFreeShipping.toFixed(2)} for free shipping` 
                     : "Congratulations! You've got free shipping"}
                 </div>
                 <div className="flex items-center gap-4">

@@ -18,7 +18,7 @@ import { Button1 } from "../Btn/Button1";
 const FeaturedProduct = ({
   data = {
     title: "Modern Beige Armchair with Wooden Legs",
-    price: "$150.00",
+    price: "₹150.00",
     description:
       "Donec dapibus tellus sem, quis aliquam libero pharetra non. Nam vitae fermentum leo. Pellentesque bibendum dui eu mi tempor sodales. Integer gravida odio in sem laoreet tempus. Nunc vehicula nibh mauris, id bibendum metus facilisis iaculis. Phasellus suscipit dictum ...",
     stockStatus: "50 Products in stock",
@@ -28,7 +28,7 @@ const FeaturedProduct = ({
     bgImage:
       "https://images.unsplash.com/photo-1618220179428-22790b46a013?auto=format&fit=crop&q=80",
     estimatedDelivery: "22 - 23 Jun, 2025",
-    freeShipping: "On all order over $200.00",
+    freeShipping: "On all order over ₹200.00",
   },
 }) => {
   const [quantity, setQuantity] = useState(1);

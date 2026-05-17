@@ -27,7 +27,7 @@ const Wishlist = () => {
   const wishlistItems = wishlist?.products?.map(product => ({
     id: product._id,
     name: product.name,
-    price: `$${product.price?.sellingPrice}`,
+    price: `₹${product.price?.sellingPrice}`,
     dateAdded: new Date(product.createdAt).toLocaleDateString('en-US', {
       month: 'short',
       day: '2-digit',

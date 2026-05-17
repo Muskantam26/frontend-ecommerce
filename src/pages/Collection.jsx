@@ -47,7 +47,7 @@ const Collection = () => {
         const transformedProducts = productsList.map(p => ({
           id: p._id,
           name: p.name,
-          price: typeof p.price === 'object' ? `$${(p.price?.sellingPrice || 0).toFixed(2)}` : `$${(p.price || 0).toFixed(2)}`,
+          price: typeof p.price === 'object' ? `₹${(p.price?.sellingPrice || 0).toFixed(2)}` : `₹${(p.price || 0).toFixed(2)}`,
           image: p.images && p.images.length > 0 ? p.images[0] : "https://via.placeholder.com/300"
         }));
 
@@ -96,25 +96,25 @@ const Collection = () => {
   {
     id: 1,
     name: "Modern Single Sofa Chair For Stylish Living Room",
-    price: "$200.00",
+    price: "₹200.00",
     image: "https://nov-minicom.myshopify.com/cdn/shop/files/1-min_bdb6b918-6f94-45a7-b53e-4d9977e4c158.jpg?v=1749111975&width=1120",
   },
   {
     id: 2,
     name: "Decorative Cactus Plant Pot For Indoor Display",
-    price: "$37.00",
+    price: "₹37.00",
     image: "//nov-minicom.myshopify.com/cdn/shop/files/1-min_44cdab73-bcb9-483d-ba6c-cbfc32321ed9.jpg?v=1749112427&width=260",
   },
   {
     id: 3,
     name: "Solid Wood TV Stand With Storage Drawers Design",
-    price: "$135.00",
+    price: "₹135.00",
     image: "//nov-minicom.myshopify.com/cdn/shop/files/1-min_2ee03dbe-b3f3-4ffe-a2f8-299ecbdfaa06.jpg?v=1749111269&width=260",
   },
   {
     id: 4,
     name: "Modern Wooden Lounge Chair With Wide Fabric Arms",
-    price: "$155.00",
+    price: "₹155.00",
     image: "//nov-minicom.myshopify.com/cdn/shop/files/1-min_202fa2e4-302c-481c-aab5-74b98f061838.jpg?v=1749110906&width=260",
   },
 ];

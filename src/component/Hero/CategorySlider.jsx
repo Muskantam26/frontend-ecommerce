@@ -34,7 +34,7 @@ export const CategorySlider = ({ data = [] }) => {
                   <div className="absolute inset-0 bg-black -translate-x-[101%] group-hover:translate-x-0 transition-transform duration-500 ease-in-out z-[0]"></div>
 
                   {/* Text Container */}
-                  <span className="font-semibold text-xs  whitespace-normal leading-tight w-[70%] z-10 transition-colors duration-300">
+                  <span className="font-semibold text-xs  text-black hover:text-white whitespace-normal leading-tight w-[70%] z-10 transition-colors duration-300">
                     {cat.title}
                   </span>
 

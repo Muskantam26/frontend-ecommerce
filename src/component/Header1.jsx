@@ -192,7 +192,7 @@ const Header1 = ({ isAccountOpen, setIsAccountOpen }) => {
           />
           </span>
 
-          <Button1 variant="cart" icon={<BagIcon />} badge={itemsCount.toString()} price={`$${totalPrice.toFixed(2)}`} onClick={() => dispatch(openCart())} />
+          <Button1 variant="cart" icon={<BagIcon />} badge={itemsCount.toString()} price={`₹${totalPrice.toFixed(2)}`} onClick={() => dispatch(openCart())} />
         </div>
       </div>
 

@@ -80,49 +80,49 @@ const handpickedEleganceData = [
   {
     id: 1,
     name: "Modern Single Sofa Chair For Stylish Living Room",
-    price: "$200.00",
+    price: "₹200.00",
     image: "https://nov-minicom.myshopify.com/cdn/shop/files/1-min_bdb6b918-6f94-45a7-b53e-4d9977e4c158.jpg?v=1749111975&width=1120",
   },
   {
     id: 2,
     name: "Decorative Cactus Plant Pot For Indoor Display",
-    price: "$37.00",
+    price: "₹37.00",
     image: "//nov-minicom.myshopify.com/cdn/shop/files/1-min_44cdab73-bcb9-483d-ba6c-cbfc32321ed9.jpg?v=1749112427&width=260",
   },
   {
     id: 3,
     name: "Solid Wood TV Stand With Storage Drawers Design",
-    price: "$135.00",
+    price: "₹135.00",
     image: "//nov-minicom.myshopify.com/cdn/shop/files/1-min_2ee03dbe-b3f3-4ffe-a2f8-299ecbdfaa06.jpg?v=1749111269&width=260",
   },
   {
     id: 4,
     name: "Modern Wooden Lounge Chair With Wide Fabric Arms",
-    price: "$155.00",
+    price: "₹155.00",
     image: "//nov-minicom.myshopify.com/cdn/shop/files/1-min_202fa2e4-302c-481c-aab5-74b98f061838.jpg?v=1749110906&width=260",
   },
   {
     id: 5,
     name: "Modern Low Profile Swivel Sofa With Soft Seat",
-    price: "$125.00",
+    price: "₹125.00",
     image: "//nov-minicom.myshopify.com/cdn/shop/files/1-min_be47ec7a-ae18-44a0-ad6b-efeabb425930.jpg?v=1749110719&width=260",
   },
   {
     id: 6,
     name: "Minimalist White Ceramic Vases Set",
-    price: "$45.00",
+    price: "₹45.00",
     image: "//nov-minicom.myshopify.com/cdn/shop/files/1-min_0c6275f8-a24e-4702-90d0-bd01e49e1b67.jpg?v=1749111925&width=260",
   },
   {
     id: 7,
     name: "Classic Wooden Dining Chair With Curved Back",
-    price: "$89.00",
+    price: "₹89.00",
     image: "//nov-minicom.myshopify.com/cdn/shop/files/1-min_02d0e979-f8f4-49b4-bbc3-c4852675c021.jpg?v=1749111160&width=260",
   },
   {
     id: 8,
     name: "Round Coffee Table With Golden Metal Legs",
-    price: "$210.00",
+    price: "₹210.00",
     image: "//nov-minicom.myshopify.com/cdn/shop/files/1-min_dfb1df34-1c68-4ee5-8bfb-ae5b3f5e430b.jpg?v=1749111367&width=260",
   },
 ];
@@ -171,7 +171,7 @@ const brandMarqueeData = [
 
 const featuredProductData = {
   title: "Modern Beige Armchair with Wooden Legs",
-  price: "$150.00",
+  price: "₹150.00",
   description: "Donec dapibus tellus sem, quis aliquam libero pharetra non. Nam vitae fermentum leo. Pellentesque bibendum dui eu mi tempor sodales. Integer gravida odio in sem laoreet tempus. Nunc vehicula nibh mauris, id bibendum metus facilisis iaculis. Phasellus suscipit dictum ...",
   stockStatus: "50 Products in stock",
   images: [
@@ -179,7 +179,7 @@ const featuredProductData = {
   ],
   bgImage: "https://nov-minicom.myshopify.com/cdn/shop/files/home1-img-featured.jpg?v=1750143747&width=1296",
   estimatedDelivery: "22 - 23 Jun, 2025",
-  freeShipping: "On all order over $200.00",
+  freeShipping: "On all order over ₹200.00",
 };
 
 const tickerData = [
@@ -192,7 +192,7 @@ const tickerData = [
     icon: <Wrench className="w-10 h-10 mr-3" strokeWidth={1.5} />,
   },
   {
-    text: "FREE DELIVERY ON ORDERS OVER $200",
+    text: "FREE DELIVERY ON ORDERS OVER ₹200",
     icon: <Truck className="w-10 h-10 mr-3" strokeWidth={1.5} />,
   },
   {
@@ -308,22 +308,22 @@ const productGridData = [
       {
         id: 1,
         title: "Modern Beige Armchair With Wooden Legs",
-        price: "$150.00",
+        price: "₹150.00",
         image: "https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?auto=format&fit=crop&q=80",
         hoverImage: "https://images.unsplash.com/photo-1506898667547-42e22a46e125?auto=format&fit=crop&q=80",
       },
       {
         id: 2,
         title: "Solid Wood TV Stand With Storage Drawers Design",
-        price: "$135.00",
+        price: "₹135.00",
         image: "https://images.unsplash.com/photo-1595514535215-ab1496a7dd76?auto=format&fit=crop&q=80",
         hoverImage: "https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?auto=format&fit=crop&q=80",
       },
       {
         id: 3,
         title: "Wooden Frame Sofa Chair With Plush Cushion Seat",
-        price: "$270.00",
-        originalPrice: "$280.00",
+        price: "₹270.00",
+        originalPrice: "₹280.00",
         discount: "-3%",
         image: "https://images.unsplash.com/photo-1540574163026-643ea20d25b5?auto=format&fit=crop&q=80",
         hoverImage: "https://images.unsplash.com/photo-1505693314120-0d443867891c?auto=format&fit=crop&q=80",
@@ -331,7 +331,7 @@ const productGridData = [
       {
         id: 4,
         title: "Premium Solid Wood Chair With Comfortable Design",
-        price: "$79.00",
+        price: "₹79.00",
         image: "https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&q=80",
         hoverImage: "https://images.unsplash.com/photo-1595514535215-ab1496a7dd76?auto=format&fit=crop&q=80",
       }
@@ -343,28 +343,28 @@ const productGridData = [
       {
         id: 5,
         title: "Compact Mini Plant Pot For Desk Or Shelf Display",
-        price: "$37.00",
+        price: "₹37.00",
         image: "https://images.unsplash.com/photo-1485955900006-10f4d324d411?auto=format&fit=crop&q=80",
         hoverImage: "https://images.unsplash.com/photo-1416879598555-46aa1a3f6834?auto=format&fit=crop&q=80",
       },
       {
         id: 6,
         title: "Decorative Cactus Plant Pot For Indoor Display",
-        price: "$37.00",
+        price: "₹37.00",
         image: "https://images.unsplash.com/photo-1459156212016-c812468e2115?auto=format&fit=crop&q=80",
         hoverImage: "https://images.unsplash.com/photo-1485955900006-10f4d324d411?auto=format&fit=crop&q=80",
       },
       {
         id: 7,
         title: "Durable Plastic Fiber Plant Pot For Indoor Decor",
-        price: "$78.00",
+        price: "₹78.00",
         image: "https://images.unsplash.com/photo-1416879598555-46aa1a3f6834?auto=format&fit=crop&q=80",
         hoverImage: "https://images.unsplash.com/photo-1459156212016-c812468e2115?auto=format&fit=crop&q=80",
       },
       {
         id: 8,
         title: "Mini Ceramic Flower Pot For Desk And Home Decor",
-        price: "$15.00",
+        price: "₹15.00",
         image: "https://images.unsplash.com/photo-1485955900006-10f4d324d411?auto=format&fit=crop&q=80",
         hoverImage: "https://images.unsplash.com/photo-1416879598555-46aa1a3f6834?auto=format&fit=crop&q=80",
       }
@@ -376,8 +376,8 @@ const productGridData = [
       {
         id: 9,
         title: "Wooden Office Desk With Drawers Open Storage",
-        price: "$140.00",
-        originalPrice: "$145.00",
+        price: "₹140.00",
+        originalPrice: "₹145.00",
         discount: "-3%",
         image: "https://images.unsplash.com/photo-1518455027359-f3f8164ba6bd?auto=format&fit=crop&q=80",
         hoverImage: "https://images.unsplash.com/photo-1595514535215-ab1496a7dd76?auto=format&fit=crop&q=80",
@@ -385,21 +385,21 @@ const productGridData = [
       {
         id: 10,
         title: "Premium Solid Wood Chair With Comfortable Design",
-        price: "$79.00",
+        price: "₹79.00",
         image: "https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&q=80",
         hoverImage: "https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?auto=format&fit=crop&q=80",
       },
       {
         id: 11,
         title: "Classic Wooden Nightstand With Dual Storage Drawers",
-        price: "$99.00",
+        price: "₹99.00",
         image: "https://images.unsplash.com/photo-1533090161767-e6ffed986c88?auto=format&fit=crop&q=80",
         hoverImage: "https://images.unsplash.com/photo-1505693314120-0d443867891c?auto=format&fit=crop&q=80",
       },
       {
         id: 12,
         title: "Modern Beige Armchair With Wooden Legs",
-        price: "$150.00",
+        price: "₹150.00",
         image: "https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?auto=format&fit=crop&q=80",
         hoverImage: "https://images.unsplash.com/photo-1506898667547-42e22a46e125?auto=format&fit=crop&q=80",
       }
@@ -411,28 +411,28 @@ const productGridData = [
       {
         id: 13,
         title: "Solid Wood Bed Frame With Classic Vintage Design",
-        price: "$300.00",
+        price: "₹300.00",
         image: "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&q=80",
         hoverImage: "https://images.unsplash.com/photo-1556228578-0d85b1a4d571?auto=format&fit=crop&q=80",
       },
       {
         id: 14,
         title: "Wooden Base Table Lamp With Fabric Shade Design",
-        price: "$35.00",
+        price: "₹35.00",
         image: "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&q=80",
         hoverImage: "https://images.unsplash.com/photo-1540932239986-30128078f3c5?auto=format&fit=crop&q=80",
       },
       {
         id: 15,
         title: "Solid Wood Bedside Cabinet With Two Storage Drawers",
-        price: "$265.00",
+        price: "₹265.00",
         image: "https://images.unsplash.com/photo-1533090161767-e6ffed986c88?auto=format&fit=crop&q=80",
         hoverImage: "https://images.unsplash.com/photo-1505693314120-0d443867891c?auto=format&fit=crop&q=80",
       },
       {
         id: 16,
         title: "Classic Wooden Nightstand With Dual Storage Drawers",
-        price: "$99.00",
+        price: "₹99.00",
         image: "https://images.unsplash.com/photo-1533090161767-e6ffed986c88?auto=format&fit=crop&q=80",
         hoverImage: "https://images.unsplash.com/photo-1505693314120-0d443867891c?auto=format&fit=crop&q=80",
       }
@@ -563,7 +563,7 @@ const Hero = () => {
         const transformedProducts = productsList.map(p => ({
           id: p._id,
           name: p.name,
-          price: typeof p.price === 'object' ? `$${(p.price?.sellingPrice || 0).toFixed(2)}` : `$${(p.price || 0).toFixed(2)}`,
+          price: typeof p.price === 'object' ? `₹${(p.price?.sellingPrice || 0).toFixed(2)}` : `₹${(p.price || 0).toFixed(2)}`,
           category: p.category,
           image: p.images && p.images.length > 0 ? p.images[0] : "https://via.placeholder.com/300"
         }));

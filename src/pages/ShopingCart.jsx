@@ -29,19 +29,19 @@ const recommendedProducts = [
   {
     id: 101,
     name: "Solid Wood Plant Stand for Indoor Pot Display",
-    price: "$19.99",
+    price: "₹19.99",
     image: "https://images.unsplash.com/photo-1485955900006-10f4d324d411?auto=format&fit=crop&q=80",
   },
   {
     id: 102,
     name: "Solid Wood Bedside Cabinet with Two Storage Drawers",
-    price: "$19.99",
+    price: "₹19.99",
     image: "https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?auto=format&fit=crop&q=80",
   },
   {
     id: 103,
     name: "Solid Wood Bed Frame with Classic Vintage Design",
-    price: "$19.99",
+    price: "₹19.99",
     image: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&q=80",
   }
 ];
@@ -190,7 +190,7 @@ const ShopingCart = () => {
               <div className="mb-4">
                 <div className="text-success text-[13px] font-bold mb-4 uppercase tracking-wide">
                   {remainingForFreeShipping > 0 
-                    ? `SPEND $${remainingForFreeShipping.toFixed(2)} FOR FREE SHIPPING` 
+                    ? `SPEND ₹${remainingForFreeShipping.toFixed(2)} FOR FREE SHIPPING` 
                     : "CONGRATULATIONS! YOU'VE GOT FREE SHIPPING"}
                 </div>
                 
@@ -207,7 +207,7 @@ const ShopingCart = () => {
                 </div>
               </div>
               <div className="text-[13px] text-body mt-6">
-                Free shipping for any orders above $1,000.00
+                Free shipping for any orders above ₹1,000.00
               </div>
             </div>
           </div>
